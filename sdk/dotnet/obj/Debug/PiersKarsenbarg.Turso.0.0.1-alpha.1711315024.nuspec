@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>PiersKarsenbarg.Turso</id>
+    <version>0.0.1-alpha.1711315024+7da018ef</version>
+    <authors>Piers Karsenbarg</authors>
+    <icon>logo.png</icon>
+    <description>Turso provider</description>
+    <repository type="git" commit="7da018efcce83d3f2b86f35b145d9a19c0770eb6" />
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="Pulumi" version="3.60.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/bin/Debug/net6.0/PiersKarsenbarg.Turso.pdb" target="lib/net6.0/PiersKarsenbarg.Turso.pdb" />
+    <file src="/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/bin/Debug/net6.0/PiersKarsenbarg.Turso.dll" target="lib/net6.0/PiersKarsenbarg.Turso.dll" />
+    <file src="/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/bin/Debug/net6.0/PiersKarsenbarg.Turso.xml" target="lib/net6.0/PiersKarsenbarg.Turso.xml" />
+    <file src="/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/version.txt" target="content/version.txt" />
+    <file src="/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/pulumi-plugin.json" target="content/pulumi-plugin.json" />
+    <file src="/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/logo.png" target="logo.png" />
+  </files>
+</package>

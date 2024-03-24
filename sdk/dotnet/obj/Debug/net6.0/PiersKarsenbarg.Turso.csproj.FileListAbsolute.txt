@@ -1,0 +1,15 @@
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/bin/Debug/net6.0/PiersKarsenbarg.Turso.deps.json
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/bin/Debug/net6.0/PiersKarsenbarg.Turso.dll
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/bin/Debug/net6.0/PiersKarsenbarg.Turso.pdb
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/bin/Debug/net6.0/PiersKarsenbarg.Turso.xml
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/PiersKarsenbarg.Turso.csproj.AssemblyReference.cache
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/PiersKarsenbarg.Turso.GeneratedMSBuildEditorConfig.editorconfig
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/PiersKarsenbarg.Turso.AssemblyInfoInputs.cache
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/PiersKarsenbarg.Turso.AssemblyInfo.cs
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/PiersKarsenbarg.Turso.csproj.CoreCompileInputs.cache
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/PiersKarsenbarg.Turso.sourcelink.json
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/PiersKarsenbarg.Turso.dll
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/refint/PiersKarsenbarg.Turso.dll
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/PiersKarsenbarg.Turso.xml
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/PiersKarsenbarg.Turso.pdb
+/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/obj/Debug/net6.0/ref/PiersKarsenbarg.Turso.dll

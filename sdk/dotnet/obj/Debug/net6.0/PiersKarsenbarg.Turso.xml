@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PiersKarsenbarg.Turso</name>
+    </assembly>
+    <members>
+        <member name="P:PiersKarsenbarg.Turso.Config.ApiToken">
+            <summary>
+            Your Turso API token
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.Config.OrganizationName">
+            <summary>
+            Organisation name
+            </summary>
+        </member>
+        <member name="M:PiersKarsenbarg.Turso.Database.#ctor(System.String,PiersKarsenbarg.Turso.DatabaseArgs,Pulumi.CustomResourceOptions)">
+             <summary>
+             Create a Database resource with the given unique name, arguments, and options.
+             </summary>
+            
+             <param name="name">The unique name of the resource</param>
+             <param name="args">The arguments used to populate this resource's properties</param>
+             <param name="options">A bag of options that control this resource's behavior</param>
+        </member>
+        <member name="M:PiersKarsenbarg.Turso.Database.Get(System.String,Pulumi.Input{System.String},Pulumi.CustomResourceOptions)">
+             <summary>
+             Get an existing Database resource's state with the given name, ID, and optional extra
+             properties used to qualify the lookup.
+             </summary>
+            
+             <param name="name">The unique name of the resulting resource.</param>
+             <param name="id">The unique provider ID of the resource to lookup.</param>
+             <param name="options">A bag of options that control this resource's behavior</param>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.Provider.ApiToken">
+            <summary>
+            Your Turso API token
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.Provider.OrganizationName">
+            <summary>
+            Organisation name
+            </summary>
+        </member>
+        <member name="M:PiersKarsenbarg.Turso.Provider.#ctor(System.String,PiersKarsenbarg.Turso.ProviderArgs,Pulumi.CustomResourceOptions)">
+             <summary>
+             Create a Provider resource with the given unique name, arguments, and options.
+             </summary>
+            
+             <param name="name">The unique name of the resource</param>
+             <param name="args">The arguments used to populate this resource's properties</param>
+             <param name="options">A bag of options that control this resource's behavior</param>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.ProviderArgs.ApiToken">
+            <summary>
+            Your Turso API token
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.ProviderArgs.OrganizationName">
+            <summary>
+            Organisation name
+            </summary>
+        </member>
+    </members>
+</doc>
