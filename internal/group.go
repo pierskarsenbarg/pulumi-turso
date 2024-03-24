@@ -1,6 +1,10 @@
 package turso
 
-import "context"
+import (
+	"context"
+	"fmt"
+	"net/http"
+)
 
 type CreateGroupRequest struct {
 	Name     string `json:"name"`
@@ -28,6 +32,16 @@ type Group struct {
 	Version         string   `json:"version"`
 }
 
-func (c *Client) CreateGroup(ctx context.Context, name string, location string) {
-
+func (c *Client) CreateGroup(ctx context.Context, organisationName string, groupName string, location string) (*CreateGroupResponse, error) {
+	requestPath := fmt.Sprintf("/v1/organizations/%s/groups", organisationName)
+	req := CreateGroupRequest{
+		Name:     groupName,
+		Location: location,
+	}
+	var res CreateGroupResponse
+	_, err := c.do(ctx, http.MethodPost, requestPath, req, &res)
+	if err != nil {
+		return nil, err
+	}
+	return &res, nil
 }
