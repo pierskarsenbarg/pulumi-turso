@@ -50,11 +50,11 @@ type DeleteDatabaseResponse struct {
 	Database string `json:"database"`
 }
 
-func (c *Client) CreateDatabase(ctx context.Context, name string, group string, organisationName string) (*CreateDatabaseResponse, error) {
+func (c *Client) CreateDatabase(ctx context.Context, name string, groupName string, organisationName string) (*CreateDatabaseResponse, error) {
 	requestPath := fmt.Sprintf("/v1/organizations/%s/databases", organisationName)
 	req := CreateDatabaseRequest{
 		Name:  name,
-		Group: group,
+		Group: groupName,
 	}
 	var res CreateDatabaseResponse
 	_, err := c.do(ctx, http.MethodPost, requestPath, req, &res)
