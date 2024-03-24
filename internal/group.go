@@ -28,19 +28,6 @@ type Group struct {
 	Version         string   `json:"version"`
 }
 
-/*
-"archived": true,
-    "locations": [
-      "lhr",
-      "ams",
-      "bos"
-    ],
-    "name": "default",
-    "primary": "lhr",
-    "uuid": "0a28102d-6906-11ee-8553-eaa7715aeaf2",
-    "version": "v0.23.7"
-*/
-
 func (c *Client) CreateGroup(ctx context.Context, name string, location string) {
 
 }
