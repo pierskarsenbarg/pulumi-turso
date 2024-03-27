@@ -63,6 +63,7 @@ func provider() p.Provider {
 		},
 		Resources: []infer.InferredResource{
 			infer.Resource[*pkg.Database, pkg.DatabaseArgs, pkg.DatabaseState](),
+			infer.Resource[*pkg.Group, pkg.GroupArgs, pkg.GroupState](),
 		},
 		ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 			"pkg": "index",

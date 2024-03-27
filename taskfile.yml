@@ -92,5 +92,5 @@ tasks:
       - '**/*.go'
     interval: 500ms
     cmds:
-      - go mod tidy
+      - echo "Re-building provider"
       - task: build_provider

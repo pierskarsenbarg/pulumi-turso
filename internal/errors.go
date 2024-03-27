@@ -7,7 +7,7 @@ import (
 
 type errorResponse struct {
 	Code    string `json:"code"`
-	Message string `json:"message"`
+	Message string `json:"error"`
 }
 
 func (err *errorResponse) Error() string {
