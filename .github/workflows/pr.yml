@@ -4,6 +4,7 @@ on:
     types:
     - opened
     - reopened
+    - edited
 jobs:
   build_sdks:
     name: Build SDKs
