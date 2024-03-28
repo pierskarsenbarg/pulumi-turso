@@ -33,6 +33,75 @@
              <param name="id">The unique provider ID of the resource to lookup.</param>
              <param name="options">A bag of options that control this resource's behavior</param>
         </member>
+        <member name="P:PiersKarsenbarg.Turso.Group.DbVersion">
+            <summary>
+            The current libSQL server version the databases in that group are running.
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.Group.GroupId">
+            <summary>
+            The group universal unique identifier (UUID).
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.Group.Locations">
+            <summary>
+            An array of location keys the group is located.
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.Group.Name">
+            <summary>
+            The group name, unique across your organization.
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.Group.Organization">
+            <summary>
+            The name of the organization or user.
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.Group.PrimaryLocation">
+            <summary>
+            The primary location key.
+            </summary>
+        </member>
+        <member name="M:PiersKarsenbarg.Turso.Group.#ctor(System.String,PiersKarsenbarg.Turso.GroupArgs,Pulumi.CustomResourceOptions)">
+             <summary>
+             Create a Group resource with the given unique name, arguments, and options.
+             </summary>
+            
+             <param name="name">The unique name of the resource</param>
+             <param name="args">The arguments used to populate this resource's properties</param>
+             <param name="options">A bag of options that control this resource's behavior</param>
+        </member>
+        <member name="M:PiersKarsenbarg.Turso.Group.Get(System.String,Pulumi.Input{System.String},Pulumi.CustomResourceOptions)">
+             <summary>
+             Get an existing Group resource's state with the given name, ID, and optional extra
+             properties used to qualify the lookup.
+             </summary>
+            
+             <param name="name">The unique name of the resulting resource.</param>
+             <param name="id">The unique provider ID of the resource to lookup.</param>
+             <param name="options">A bag of options that control this resource's behavior</param>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.GroupArgs.Locations">
+            <summary>
+            An array of location keys the group is located.
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.GroupArgs.Name">
+            <summary>
+            The name of the new group.
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.GroupArgs.Organization">
+            <summary>
+            The name of the organization or user.
+            </summary>
+        </member>
+        <member name="P:PiersKarsenbarg.Turso.GroupArgs.PrimaryLocation">
+            <summary>
+            The primary location key for the new group.
+            </summary>
+        </member>
         <member name="P:PiersKarsenbarg.Turso.Provider.ApiToken">
             <summary>
             Your Turso API token

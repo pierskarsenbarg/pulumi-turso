@@ -6,6 +6,7 @@ from . import _utilities
 import typing
 # Export this package's modules as members:
 from .database import *
+from .group import *
 from .provider import *
 
 # Make subpackages available:
@@ -23,7 +24,8 @@ _utilities.register(
   "mod": "index",
   "fqn": "pierskarsenbarg_pulumi_turso",
   "classes": {
-   "turso:index:Database": "Database"
+   "turso:index:Database": "Database",
+   "turso:index:Group": "Group"
   }
  }
 ]

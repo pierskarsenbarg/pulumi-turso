@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "vApiSOTqua9Bo13NYyBn3TLoNkz7o4hSZKX3AtOuAcvxeOOYKa7kddfT85mHfPtvxbsMUwjc5iS5/sU6mgJHMg==",
+  "dgSpecHash": "E64+F7vY908BNmNvGs+NlRw/tkWVryBgOgFfQ+XPwGggkEl3bnmPlJmdr6rXBFACydSeDWNROxiij3lEAbVNpw==",
   "success": true,
   "projectFilePath": "/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/PiersKarsenbarg.Turso.csproj",
   "expectedPackageFiles": [

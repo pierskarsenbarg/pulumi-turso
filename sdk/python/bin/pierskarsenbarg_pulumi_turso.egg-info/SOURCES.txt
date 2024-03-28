@@ -3,6 +3,7 @@ setup.py
 pierskarsenbarg_pulumi_turso/__init__.py
 pierskarsenbarg_pulumi_turso/_utilities.py
 pierskarsenbarg_pulumi_turso/database.py
+pierskarsenbarg_pulumi_turso/group.py
 pierskarsenbarg_pulumi_turso/provider.py
 pierskarsenbarg_pulumi_turso/pulumi-plugin.json
 pierskarsenbarg_pulumi_turso/py.typed
@@ -13,4 +14,5 @@ pierskarsenbarg_pulumi_turso.egg-info/not-zip-safe
 pierskarsenbarg_pulumi_turso.egg-info/requires.txt
 pierskarsenbarg_pulumi_turso.egg-info/top_level.txt
 pierskarsenbarg_pulumi_turso/config/__init__.py
+pierskarsenbarg_pulumi_turso/config/__init__.pyi
 pierskarsenbarg_pulumi_turso/config/vars.py
