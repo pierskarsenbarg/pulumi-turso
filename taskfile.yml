@@ -71,7 +71,7 @@ tasks:
       - cp README.md {{.SDK_DIR}}/python/
       - |
         cd {{.SDK_DIR}}/python/ && \
-          python3 setup.py clean --all 2>/dev/null && \
+          python3 setup.py clean --all && \
           rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
           sed -i.bak -e 's/^VERSION = .*/VERSION = "{{.PYTHON_VERSION}}"/g' -e 's/^PLUGIN_VERSION = .*/PLUGIN_VERSION = "{{.PYTHON_VERSION}}"/g' ./bin/setup.py && \
           rm ./bin/setup.py.bak && \

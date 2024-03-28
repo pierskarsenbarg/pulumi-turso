@@ -2,11 +2,11 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>PiersKarsenbarg.Turso</id>
-    <version>0.0.1-alpha.1711315024+7da018ef</version>
+    <version>0.0.1-alpha.1711613233+e3aa8dc6.dirty</version>
     <authors>Piers Karsenbarg</authors>
     <icon>logo.png</icon>
     <description>Turso provider</description>
-    <repository type="git" commit="7da018efcce83d3f2b86f35b145d9a19c0770eb6" />
+    <repository type="git" url="https://github.com/pierskarsenbarg/pulumi-turso.git" commit="e3aa8dc6a6fa008e05ec007e449687a691f0d37e" />
     <dependencies>
       <group targetFramework="net6.0">
         <dependency id="Pulumi" version="3.60.0" exclude="Build,Analyzers" />

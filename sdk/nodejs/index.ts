@@ -10,6 +10,11 @@ export type Database = import("./database").Database;
 export const Database: typeof import("./database").Database = null as any;
 utilities.lazyLoad(exports, ["Database"], () => require("./database"));
 
+export { GroupArgs } from "./group";
+export type Group = import("./group").Group;
+export const Group: typeof import("./group").Group = null as any;
+utilities.lazyLoad(exports, ["Group"], () => require("./group"));
+
 export { ProviderArgs } from "./provider";
 export type Provider = import("./provider").Provider;
 export const Provider: typeof import("./provider").Provider = null as any;
@@ -29,6 +34,8 @@ const _module = {
         switch (type) {
             case "turso:index:Database":
                 return new Database(name, <any>undefined, { urn })
+            case "turso:index:Group":
+                return new Group(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

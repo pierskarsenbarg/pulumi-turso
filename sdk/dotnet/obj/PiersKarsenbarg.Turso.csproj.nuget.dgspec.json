@@ -5,7 +5,7 @@
   },
   "projects": {
     "/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/PiersKarsenbarg.Turso.csproj": {
-      "version": "0.0.1-alpha.1711315024+7da018ef",
+      "version": "0.0.1-alpha.1711613233+e3aa8dc6.dirty",
       "restore": {
         "projectUniqueName": "/Users/pierskarsenbarg/go/src/github.com/pierskarsenbarg/pulumi-turso/sdk/dotnet/PiersKarsenbarg.Turso.csproj",
         "projectName": "PiersKarsenbarg.Turso",

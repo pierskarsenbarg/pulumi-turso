@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "PiersKarsenbarg.Turso/0.0.1-alpha.1711315024+7da018ef": {
+      "PiersKarsenbarg.Turso/0.0.1-alpha.1711613233+e3aa8dc6.dirty": {
         "dependencies": {
           "Microsoft.SourceLink.GitHub": "1.0.0",
           "Pulumi": "3.60.0"
@@ -206,7 +206,7 @@
     }
   },
   "libraries": {
-    "PiersKarsenbarg.Turso/0.0.1-alpha.1711315024+7da018ef": {
+    "PiersKarsenbarg.Turso/0.0.1-alpha.1711613233+e3aa8dc6.dirty": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
