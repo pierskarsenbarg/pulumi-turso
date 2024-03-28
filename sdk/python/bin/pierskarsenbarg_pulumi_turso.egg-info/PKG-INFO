@@ -1,9 +1,0 @@
-Metadata-Version: 2.1
-Name: pierskarsenbarg_pulumi_turso
-Version: 0.0.1a1711613233+dirty
-Summary: Turso provider
-Requires-Python: >=3.8
-Description-Content-Type: text/markdown
-Requires-Dist: parver>=0.2.1
-Requires-Dist: pulumi<4.0.0,>=3.0.0
-Requires-Dist: semver>=2.8.1

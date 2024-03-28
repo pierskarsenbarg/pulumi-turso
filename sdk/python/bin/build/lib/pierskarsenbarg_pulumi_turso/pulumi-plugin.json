@@ -1,5 +1,0 @@
-{
-  "resource": true,
-  "name": "turso",
-  "server": "github://api.github.com/pierskarsenbarg/pulumi-turso"
-}
