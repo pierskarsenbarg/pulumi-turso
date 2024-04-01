@@ -2,7 +2,7 @@ import { $ } from "bun";
 
 await $`git update-index -q --refresh`;
 
-const { stdout, stderr, exitCode } = await $`git diff-files`.quiet();
+const { stdout } = await $`git diff-files`.quiet();
 
 if (stdout.length !== 0) {
     console.log(`Working directory dirty.`);
