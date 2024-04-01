@@ -1,0 +1,17 @@
+name: turso-minimal-group-example
+runtime: yaml
+
+plugins:
+  providers:
+    - name: turso
+      path: ../../bin
+resources:
+  tursoProvider:
+    type: pulumi:providers:turso
+  pk-group:
+    type: turso:Group
+    properties:
+      organization: pierskarsenbarg
+      primaryLocation: lhr
+    options:
+      provider: ${tursoProvider}

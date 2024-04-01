@@ -1,0 +1,21 @@
+name: turso-group-locations-example
+runtime: yaml
+
+plugins:
+  providers:
+    - name: turso
+      path: ../../bin
+resources:
+  tursoProvider:
+    type: pulumi:providers:turso
+  my-group:
+    type: turso:Group
+    properties:
+      name: piers-group
+      organization: pierskarsenbarg
+      primaryLocation: cdg
+      locations:
+        - mad
+        - lhr
+    options:
+      provider: ${tursoProvider}
