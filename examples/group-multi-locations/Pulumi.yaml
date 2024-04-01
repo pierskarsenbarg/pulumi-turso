@@ -1,4 +1,4 @@
-name: turso-group-example
+name: turso-group-locations-example
 runtime: yaml
 
 plugins:
@@ -8,14 +8,14 @@ plugins:
 resources:
   tursoProvider:
     type: pulumi:providers:turso
-    properties:
   my-group:
     type: turso:Group
     properties:
       name: piers-group
       organization: pierskarsenbarg
-      primaryLocation: lhr
+      primaryLocation: cdg
       locations:
-        - ams
+        - mad
+        - lhr
     options:
       provider: ${tursoProvider}
