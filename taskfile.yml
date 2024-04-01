@@ -89,6 +89,9 @@ tasks:
   check_working_dir:
     cmds: 
       - bun run ./ci/check-working-dir.ts
+  lint: 
+    cmds:
+      - golangci-lint run
   watch:
     watch: true
     sources:
