@@ -86,6 +86,9 @@ tasks:
       - task: generate_dotnet_sdk
       - task: generate_go_sdk
       - task: generate_python_sdk
+  check_working_dir:
+    cmds: 
+      - bun run ./ci/check-working-dir.ts
   watch:
     watch: true
     sources:
