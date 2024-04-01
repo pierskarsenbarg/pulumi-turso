@@ -128,22 +128,18 @@ func (g *Group) Diff(ctx p.Context, id string, olds GroupState, news GroupArgs) 
 
 	if len(olds.Name) > 0 && len(news.Name) == 0 {
 		// name removed
-		ctx.Log(diag.Info, fmt.Sprint("name removed"))
 		diff["name"] = p.PropertyDiff{Kind: p.Update}
 	} else if len(news.Name) > 0 && olds.Name != news.Name {
 		// name updated
-		ctx.Log(diag.Info, fmt.Sprint("name updated"))
 		diff["name"] = p.PropertyDiff{Kind: p.Update}
 	}
 
-	if sliceCompare(olds.Locations, news.Locations) {
-		ctx.Log(diag.Info, fmt.Sprint("locations are not the same"))
+	if !sliceCompare(olds.Locations, news.Locations) {
 		diff["locations"] = p.PropertyDiff{Kind: p.Update}
 	}
 
 	if olds.PrimaryLocation != news.PrimaryLocation {
-		ctx.Log(diag.Info, fmt.Sprint("primary location changed"))
-		diff["primaryLocation"] = p.PropertyDiff{Kind: p.DeleteReplace}
+		diff["primaryLocation"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
 	return p.DiffResponse{
@@ -154,7 +150,51 @@ func (g *Group) Diff(ctx p.Context, id string, olds GroupState, news GroupArgs) 
 }
 
 func (o *Group) Update(ctx p.Context, id string, olds GroupState, news GroupArgs, preview bool) (GroupState, error) {
-	return GroupState{}, nil
+	updatedGroupState := GroupState{
+		Id:              olds.Id,
+		PrimaryLocation: olds.PrimaryLocation,
+		DbVersion:       olds.DbVersion,
+		Name:            olds.Name,
+		Locations:       olds.Locations,
+	}
+	config := infer.GetConfig[Config](ctx)
+	var err error
+	if !preview {
+		// Check if name of group has changed
+		if news.Name != olds.Name && len(news.Name) == 0 {
+			// this happens if they had the name arg set but removed it so we fall back to the resource name arg
+			updatedGroupState.Name, err = buildName(id)
+			if err != nil {
+				return GroupState{}, fmt.Errorf("there was an issue creating the new resource name: %s", err)
+			}
+		} else if news.Name != olds.Name {
+			// this happens if they just change the name
+			updatedGroupState.Name = news.Name
+		}
+
+		// check if the old and new locations match and if they don't then delete them all and add new ones
+		if !sliceCompare(updatedGroupState.Locations, news.Locations) {
+			updatedGroupState.Locations = make([]string, 0)
+			// delete all locations from group
+			for _, oldLocation := range olds.Locations {
+				err = o.removeLocationFromGroup(updatedGroupState.Name, updatedGroupState.Organization, oldLocation, config)
+				if err != nil {
+					return GroupState{}, fmt.Errorf("there as an issue removing location %s from group %s: %s", oldLocation, updatedGroupState.Name, err)
+				}
+			}
+
+			// add locations back
+			for _, newLocation := range news.Locations {
+				err = o.addLocationToGroup(updatedGroupState.Name, updatedGroupState.Organization, newLocation, config)
+				if err != nil {
+					return GroupState{}, fmt.Errorf("there was an issue adding location %s to group %s: %s", newLocation, updatedGroupState.Name, err)
+				}
+			}
+			updatedGroupState.Locations = news.Locations
+		}
+	}
+
+	return updatedGroupState, nil
 }
 
 func (*Group) removeLocationFromGroup(name string, organization string, location string, config Config) error {
