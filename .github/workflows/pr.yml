@@ -45,3 +45,5 @@ jobs:
         uses: oven-sh/setup-bun@v1
       - name: generate sdks
         run: task generate_sdks
+      - name: Check working directory
+        run: task check_working_dir
