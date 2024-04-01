@@ -5,6 +5,7 @@ on:
     - opened
     - reopened
     - edited
+    - synchronize
 jobs:
   build_sdks:
     name: Build SDKs
