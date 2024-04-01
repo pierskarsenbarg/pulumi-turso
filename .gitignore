@@ -24,3 +24,4 @@ provider/**/schema.go
 **/nuget
 **/dist
 .vscode
+sdk/dotnet/version.txt
