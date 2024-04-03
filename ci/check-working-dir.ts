@@ -10,3 +10,5 @@ if (stdout.length !== 0) {
     await $`git diff`
     await $`exit 1`
 }
+
+await $`exit 0`
