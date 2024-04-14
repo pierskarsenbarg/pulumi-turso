@@ -50,8 +50,8 @@ type DeleteDatabaseResponse struct {
 	Database string `json:"database"`
 }
 
-func (c *Client) CreateDatabase(ctx context.Context, name string, groupName string, organisationName string) (*CreateDatabaseResponse, error) {
-	requestPath := fmt.Sprintf("/v1/organizations/%s/databases", organisationName)
+func (c *Client) CreateDatabase(ctx context.Context, name string, groupName string, organizationName string) (*CreateDatabaseResponse, error) {
+	requestPath := fmt.Sprintf("/v1/organizations/%s/databases", organizationName)
 	req := CreateDatabaseRequest{
 		Name:  name,
 		Group: groupName,
@@ -65,8 +65,8 @@ func (c *Client) CreateDatabase(ctx context.Context, name string, groupName stri
 	return &res, nil
 }
 
-func (c *Client) ListDatabases(ctx context.Context, organisationName string) (*ListDatabaseResponse, error) {
-	requestPath := fmt.Sprintf("/v1/organizations/%s/databases", organisationName)
+func (c *Client) ListDatabases(ctx context.Context, organizationName string) (*ListDatabaseResponse, error) {
+	requestPath := fmt.Sprintf("/v1/organizations/%s/databases", organizationName)
 	var res ListDatabaseResponse
 	_, err := c.do(ctx, http.MethodGet, requestPath, nil, &res)
 	if err != nil {
@@ -75,8 +75,8 @@ func (c *Client) ListDatabases(ctx context.Context, organisationName string) (*L
 	return &res, nil
 }
 
-func (c *Client) GetDatabase(ctx context.Context, organisationName string, databaseName string) (*GetDatabaseResponse, error) {
-	requestPath := fmt.Sprintf("/v1/organizations/%s/databases/%s", organisationName, databaseName)
+func (c *Client) GetDatabase(ctx context.Context, organizationName string, databaseName string) (*GetDatabaseResponse, error) {
+	requestPath := fmt.Sprintf("/v1/organizations/%s/databases/%s", organizationName, databaseName)
 	var res GetDatabaseResponse
 	_, err := c.do(ctx, http.MethodGet, requestPath, nil, &res)
 	if err != nil {
@@ -85,12 +85,12 @@ func (c *Client) GetDatabase(ctx context.Context, organisationName string, datab
 	return &res, nil
 }
 
-func (c *Client) DeleteDatabase(ctx context.Context, organisationName string, databaseName string) (*DeleteDatabaseResponse, error) {
-	requestPath := fmt.Sprintf("/v1/organizations/%s/databases/%s", organisationName, databaseName)
+func (c *Client) DeleteDatabase(ctx context.Context, organizationName string, databaseName string) error {
+	requestPath := fmt.Sprintf("/v1/organizations/%s/databases/%s", organizationName, databaseName)
 	var res DeleteDatabaseResponse
 	_, err := c.do(ctx, http.MethodDelete, requestPath, nil, &res)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &res, nil
+	return nil
 }
