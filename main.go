@@ -70,6 +70,7 @@ func provider() p.Provider {
 		},
 		Functions: []infer.InferredFunction{
 			infer.Function[*pkg.GetDatabase, pkg.GetDatabaseArgs, pkg.DatabaseState](),
+			infer.Function[*pkg.GetGroup, pkg.GetGroupArgs, pkg.GroupState](),
 		},
 		Config: infer.Config[*pkg.Config](),
 	})

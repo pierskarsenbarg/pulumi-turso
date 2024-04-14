@@ -1,11 +1,6 @@
 name: pr
 on:
-  pull_request:
-    types:
-    - opened
-    - reopened
-    - edited
-    - synchronize
+  pull_request
 jobs:
   build_sdks:
     name: Build SDKs
