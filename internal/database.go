@@ -42,6 +42,11 @@ type DatabaseResponse struct {
 	Version       string   `json:"version"`
 }
 
+type GetDatabaseRequest struct {
+	DatabaseName     string `json:"databaseName"`
+	OrganizationName string `json:"organizationName"`
+}
+
 type GetDatabaseResponse struct {
 	Database DatabaseResponse `json:"database"`
 }

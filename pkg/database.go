@@ -41,6 +41,13 @@ func (ds *DatabaseState) Annotate(a infer.Annotator) {
 	a.Describe(&ds.OrganizationName, "The name of the organization or user that created the database.")
 }
 
+type GetDatabase struct{}
+
+type GetDatabaseArgs struct {
+	DatabaseName     string `pulumi:"databaseName"`
+	OrganizationName string `pulumi:"organizationName"`
+}
+
 func (d *Database) Create(ctx p.Context, name string, input DatabaseArgs, preview bool) (id string, output DatabaseState, err error) {
 
 	if preview {
@@ -106,10 +113,10 @@ func (*Database) Diff(ctx p.Context, id string, olds DatabaseState, news Databas
 
 	if len(olds.Name) > 0 && len(news.Name) == 0 {
 		// name removed
-		diff["name"] = p.PropertyDiff{Kind: p.Delete}
+		diff["name"] = p.PropertyDiff{Kind: p.DeleteReplace}
 	} else if len(news.Name) > 0 && olds.Name != news.Name {
 		// name updated
-		diff["name"] = p.PropertyDiff{Kind: p.Update}
+		diff["name"] = p.PropertyDiff{Kind: p.UpdateReplace}
 	}
 
 	if olds.GroupName != news.GroupName {
@@ -124,5 +131,21 @@ func (*Database) Diff(ctx p.Context, id string, olds DatabaseState, news Databas
 		DeleteBeforeReplace: true,
 		HasChanges:          len(diff) > 0,
 		DetailedDiff:        diff,
+	}, nil
+}
+
+func (GetDatabase) Call(ctx p.Context, args GetDatabaseArgs) (DatabaseState, error) {
+	config := infer.GetConfig[Config](ctx)
+
+	database, err := config.Client.GetDatabase(ctx, args.OrganizationName, args.DatabaseName)
+	if err != nil {
+		return DatabaseState{}, err
+	}
+	return DatabaseState{
+		DbId:             database.Database.DbId,
+		GroupName:        database.Database.Group,
+		HostName:         database.Database.Hostname,
+		Name:             args.DatabaseName,
+		OrganizationName: args.OrganizationName,
 	}, nil
 }
