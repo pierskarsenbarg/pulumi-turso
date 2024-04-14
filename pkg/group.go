@@ -128,7 +128,7 @@ func (g *Group) Diff(ctx p.Context, id string, olds GroupState, news GroupArgs) 
 
 	if len(olds.Name) > 0 && len(news.Name) == 0 {
 		// name removed
-		diff["name"] = p.PropertyDiff{Kind: p.Update}
+		diff["name"] = p.PropertyDiff{Kind: p.Delete}
 	} else if len(news.Name) > 0 && olds.Name != news.Name {
 		// name updated
 		diff["name"] = p.PropertyDiff{Kind: p.Update}
