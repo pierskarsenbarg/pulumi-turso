@@ -43,6 +43,13 @@ func (gs *GroupState) Annotate(a infer.Annotator) {
 	a.Describe(&gs.Organization, "The name of the organization or user.")
 }
 
+type GetGroup struct{}
+
+type GetGroupArgs struct {
+	GroupName        string `pulumi:"groupName"`
+	OrganizationName string `pulumi:"organizationName"`
+}
+
 func (g *Group) Create(ctx p.Context, name string, input GroupArgs, preview bool) (id string, output GroupState, err error) {
 
 	if preview {
@@ -204,6 +211,28 @@ func (g *Group) Read(ctx p.Context, id string, inputs GroupArgs, state GroupStat
 		}, nil
 }
 
+func (g *GetGroup) Call(ctx p.Context, args GetGroupArgs) (GroupState, error) {
+	config := infer.GetConfig[Config](ctx)
+
+	group, err := config.Client.GetGroup(ctx, turso.GetGroupRequest{
+		OrganizationName: args.OrganizationName,
+		GroupName:        args.GroupName,
+	})
+
+	if err != nil {
+		return GroupState{}, err
+	}
+
+	return GroupState{
+		Id:              group.Group.Uuid,
+		PrimaryLocation: group.Group.PrimaryLocation,
+		DbVersion:       group.Group.Version,
+		Name:            group.Group.Name,
+		Locations:       group.Group.Locations,
+		Organization:    args.OrganizationName,
+	}, nil
+}
+
 func (*Group) addLocationToGroup(ctx p.Context, name string, organization string, location string, config Config) error {
 	_, err := config.Client.AddLocationToGroup(ctx, turso.GroupLocationRequest{
 		Organization: organization,
@@ -228,7 +257,7 @@ func (*Group) removeLocationFromGroup(ctx p.Context, name string, organization s
 	return nil
 }
 
-func (*Group) getGroup(ctx p.Context, name string, organization string, config Config) (*turso.GetGroupResponse, error) {
+func (g *Group) getGroup(ctx p.Context, name string, organization string, config Config) (*turso.GetGroupResponse, error) {
 	req := turso.GetGroupRequest{
 		OrganizationName: organization,
 		GroupName:        name,
