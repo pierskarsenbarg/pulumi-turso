@@ -3,6 +3,7 @@ package turso
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -90,18 +91,21 @@ func (c *Client) ListGroups(ctx context.Context, req ListGroupRequest) (*ListGro
 	return &res, nil
 }
 
-func (c *Client) DeleteGroup(ctx context.Context, req DeleteGroupRequest) error {
+func (c *Client) DeleteGroup(ctx context.Context, req DeleteGroupRequest) (error, *http.Response) {
 	requestPath := fmt.Sprintf("/v1/organizations/%s/groups/%s", req.Organization, req.Name)
-	var res DeleteGroupResponse
-	_, err := c.do(ctx, http.MethodDelete, requestPath, nil, &res)
+	res, err := c.do(ctx, http.MethodDelete, requestPath, nil, nil)
 	if err != nil {
-		return err
+		if res.StatusCode == 404 {
+			return nil, nil
+		}
+		return err, nil
 	}
-	return nil
+	return nil, nil
 }
 
 func (c *Client) AddLocationToGroup(ctx context.Context, req GroupLocationRequest) (*GroupLocationResponse, error) {
 	requestPath := fmt.Sprintf("/v1/organizations/%s/groups/%s/locations/%s", req.Organization, req.GroupName, req.Location)
+	log.Printf("addlocation")
 	var res GroupLocationResponse
 	_, err := c.do(ctx, http.MethodPost, requestPath, req, &res)
 	if err != nil {
@@ -112,6 +116,7 @@ func (c *Client) AddLocationToGroup(ctx context.Context, req GroupLocationReques
 
 func (c *Client) RemoveLocationFromGroup(ctx context.Context, req GroupLocationRequest) (*GroupLocationResponse, error) {
 	requestpath := fmt.Sprintf("/v1/organizations/%s/groups/%s/locations/%s", req.Organization, req.GroupName, req.Location)
+	log.Printf("removelocation")
 	var res GroupLocationResponse
 	_, err := c.do(ctx, http.MethodDelete, requestpath, req, &res)
 	if err != nil {
