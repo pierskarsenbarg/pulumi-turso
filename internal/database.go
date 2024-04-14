@@ -80,14 +80,14 @@ func (c *Client) ListDatabases(ctx context.Context, organizationName string) (*L
 	return &res, nil
 }
 
-func (c *Client) GetDatabase(ctx context.Context, organizationName string, databaseName string) (*GetDatabaseResponse, error) {
+func (c *Client) GetDatabase(ctx context.Context, organizationName string, databaseName string) (*GetDatabaseResponse, error, *http.Response) {
 	requestPath := fmt.Sprintf("/v1/organizations/%s/databases/%s", organizationName, databaseName)
-	var res GetDatabaseResponse
-	_, err := c.do(ctx, http.MethodGet, requestPath, nil, &res)
+	var dbRes GetDatabaseResponse
+	res, err := c.do(ctx, http.MethodGet, requestPath, nil, &dbRes)
 	if err != nil {
-		return nil, err
+		return nil, err, res
 	}
-	return &res, nil
+	return &dbRes, nil, nil
 }
 
 func (c *Client) DeleteDatabase(ctx context.Context, organizationName string, databaseName string) error {

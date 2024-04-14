@@ -214,12 +214,15 @@ func (g *Group) Read(ctx p.Context, id string, inputs GroupArgs, state GroupStat
 func (g *GetGroup) Call(ctx p.Context, args GetGroupArgs) (GroupState, error) {
 	config := infer.GetConfig[Config](ctx)
 
-	group, err := config.Client.GetGroup(ctx, turso.GetGroupRequest{
+	group, err, res := config.Client.GetGroup(ctx, turso.GetGroupRequest{
 		OrganizationName: args.OrganizationName,
 		GroupName:        args.GroupName,
 	})
 
 	if err != nil {
+		if res.StatusCode == 404 {
+			return GroupState{}, nil
+		}
 		return GroupState{}, err
 	}
 
@@ -262,7 +265,7 @@ func (g *Group) getGroup(ctx p.Context, name string, organization string, config
 		OrganizationName: organization,
 		GroupName:        name,
 	}
-	group, err := config.Client.GetGroup(ctx, req)
+	group, err, _ := config.Client.GetGroup(ctx, req)
 	if err != nil {
 		return nil, err
 	}

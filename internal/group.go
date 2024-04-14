@@ -70,14 +70,14 @@ func (c *Client) CreateGroup(ctx context.Context, req CreateGroupRequest, organi
 	return &res, nil
 }
 
-func (c *Client) GetGroup(ctx context.Context, req GetGroupRequest) (*GetGroupResponse, error) {
+func (c *Client) GetGroup(ctx context.Context, req GetGroupRequest) (*GetGroupResponse, error, *http.Response) {
 	requestPath := fmt.Sprintf("/v1/organizations/%s/groups/%s", req.OrganizationName, req.GroupName)
-	var res GetGroupResponse
-	_, err := c.do(ctx, http.MethodGet, requestPath, nil, &res)
+	var groupRes GetGroupResponse
+	res, err := c.do(ctx, http.MethodGet, requestPath, nil, &groupRes)
 	if err != nil {
-		return nil, err
+		return nil, err, res
 	}
-	return &res, nil
+	return &groupRes, nil, nil
 }
 
 func (c *Client) ListGroups(ctx context.Context, req ListGroupRequest) (*ListGroupResponse, error) {
