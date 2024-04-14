@@ -134,11 +134,39 @@ func (*Database) Diff(ctx p.Context, id string, olds DatabaseState, news Databas
 	}, nil
 }
 
+func (*Database) Read(ctx p.Context, id string, inputs DatabaseArgs, state DatabaseState) (
+	string, DatabaseArgs, DatabaseState, error) {
+	config := infer.GetConfig[Config](ctx)
+
+	database, err, res := config.Client.GetDatabase(ctx, state.OrganizationName, state.Name)
+	if err != nil {
+		if res.StatusCode == 404 {
+			// database doesn't exist
+			return "", DatabaseArgs{}, DatabaseState{}, nil
+		}
+		return "", DatabaseArgs{}, DatabaseState{}, err
+	}
+	return database.Database.DbId, DatabaseArgs{
+			Name:             database.Database.Name,
+			GroupName:        database.Database.Group,
+			OrganizationName: inputs.OrganizationName,
+		}, DatabaseState{
+			DbId:             database.Database.DbId,
+			GroupName:        database.Database.Group,
+			HostName:         database.Database.Hostname,
+			Name:             database.Database.Name,
+			OrganizationName: inputs.OrganizationName,
+		}, nil
+}
+
 func (GetDatabase) Call(ctx p.Context, args GetDatabaseArgs) (DatabaseState, error) {
 	config := infer.GetConfig[Config](ctx)
 
-	database, err := config.Client.GetDatabase(ctx, args.OrganizationName, args.DatabaseName)
+	database, err, res := config.Client.GetDatabase(ctx, args.OrganizationName, args.DatabaseName)
 	if err != nil {
+		if res.StatusCode == 404 {
+			return DatabaseState{}, nil
+		}
 		return DatabaseState{}, err
 	}
 	return DatabaseState{
