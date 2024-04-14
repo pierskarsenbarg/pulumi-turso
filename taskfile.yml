@@ -100,3 +100,4 @@ tasks:
     cmds:
       - echo "Re-building provider"
       - task: build_provider
+      - echo "Build complete"

@@ -90,14 +90,16 @@ func (c *Client) ListGroups(ctx context.Context, req ListGroupRequest) (*ListGro
 	return &res, nil
 }
 
-func (c *Client) DeleteGroup(ctx context.Context, req DeleteGroupRequest) error {
+func (c *Client) DeleteGroup(ctx context.Context, req DeleteGroupRequest) (error, *http.Response) {
 	requestPath := fmt.Sprintf("/v1/organizations/%s/groups/%s", req.Organization, req.Name)
-	var res DeleteGroupResponse
-	_, err := c.do(ctx, http.MethodDelete, requestPath, nil, &res)
+	res, err := c.do(ctx, http.MethodDelete, requestPath, nil, nil)
 	if err != nil {
-		return err
+		if res.StatusCode == 404 {
+			return nil, nil
+		}
+		return err, nil
 	}
-	return nil
+	return nil, nil
 }
 
 func (c *Client) AddLocationToGroup(ctx context.Context, req GroupLocationRequest) (*GroupLocationResponse, error) {
