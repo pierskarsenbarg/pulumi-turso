@@ -3,7 +3,6 @@ package turso
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -13,8 +12,8 @@ type CreateGroupRequest struct {
 }
 
 type DeleteGroupRequest struct {
-	Name         string `json:"name"`
-	Organization string `json:"organization"`
+	Name         string
+	Organization string
 }
 
 type DeleteGroupResponse struct {
@@ -25,12 +24,21 @@ type CreateGroupResponse struct {
 	Group Group `json:"group"`
 }
 
-type ListGroupResponse struct {
-	Groups []Group `json:"groups"`
+type GetGroupRequest struct {
+	OrganizationName string
+	GroupName        string
 }
 
 type GetGroupResponse struct {
 	Group Group `json:"group"`
+}
+
+type ListGroupRequest struct {
+	Organization string
+}
+
+type ListGroupResponse struct {
+	Groups []Group `json:"groups"`
 }
 
 type GroupLocationRequest struct {
@@ -57,7 +65,26 @@ func (c *Client) CreateGroup(ctx context.Context, req CreateGroupRequest, organi
 	var res CreateGroupResponse
 	_, err := c.do(ctx, http.MethodPost, requestPath, req, &res)
 	if err != nil {
-		log.Printf("error: %s", err)
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *Client) GetGroup(ctx context.Context, req GetGroupRequest) (*GetGroupResponse, error) {
+	requestPath := fmt.Sprintf("/v1/organizations/%s/groups/%s", req.OrganizationName, req.GroupName)
+	var res GetGroupResponse
+	_, err := c.do(ctx, http.MethodGet, requestPath, nil, &res)
+	if err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *Client) ListGroups(ctx context.Context, req ListGroupRequest) (*ListGroupResponse, error) {
+	requestPath := fmt.Sprintf("/v1/organizations/%s", req.Organization)
+	var res ListGroupResponse
+	_, err := c.do(ctx, http.MethodGet, requestPath, nil, &res)
+	if err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -70,7 +97,6 @@ func (c *Client) DeleteGroup(ctx context.Context, req DeleteGroupRequest) error 
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
