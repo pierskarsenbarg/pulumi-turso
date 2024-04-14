@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"context"
 	"fmt"
 
 	turso "github.com/pierskarsenbarg/pulumi-turso/internal"
@@ -54,14 +53,14 @@ func (g *Group) Create(ctx p.Context, name string, input GroupArgs, preview bool
 		groupName = input.Name
 	}
 	config := infer.GetConfig[Config](ctx)
-	res, err := g.createGroup(groupName, input.PrimaryLocation, input.Organization, config)
+	res, err := g.createGroup(ctx, groupName, input.PrimaryLocation, input.Organization, config)
 
 	if err != nil {
 		return "", GroupState{}, err
 	}
 
 	for _, location := range input.Locations {
-		err = g.addLocationToGroup(groupName, input.Organization, location, config)
+		err = g.addLocationToGroup(ctx, groupName, input.Organization, location, config)
 		if err != nil {
 			ctx.Log(diag.Warning, fmt.Sprintf("couldn't add location to group: %s", err))
 		}
@@ -77,8 +76,7 @@ func (g *Group) Create(ctx p.Context, name string, input GroupArgs, preview bool
 	}, nil
 }
 
-func (*Group) createGroup(name string, location string, organization string, config Config) (*turso.CreateGroupResponse, error) {
-	ctx := context.Background()
+func (*Group) createGroup(ctx p.Context, name string, location string, organization string, config Config) (*turso.CreateGroupResponse, error) {
 	group, err := config.Client.CreateGroup(ctx, turso.CreateGroupRequest{
 		Name:     name,
 		Location: location,
@@ -91,31 +89,17 @@ func (*Group) createGroup(name string, location string, organization string, con
 
 func (g *Group) Delete(ctx p.Context, id string, props GroupState) error {
 	config := infer.GetConfig[Config](ctx)
-	err := g.deleteGroup(props.Name, props.Organization, config)
+	err := g.deleteGroup(ctx, props.Name, props.Organization, config)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (*Group) deleteGroup(name string, organization string, config Config) error {
-	ctx := context.Background()
+func (*Group) deleteGroup(ctx p.Context, name string, organization string, config Config) error {
 	err := config.Client.DeleteGroup(ctx, turso.DeleteGroupRequest{
 		Name:         name,
 		Organization: organization,
-	})
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (*Group) addLocationToGroup(name string, organization string, location string, config Config) error {
-	ctx := context.Background()
-	_, err := config.Client.AddLocationToGroup(ctx, turso.GroupLocationRequest{
-		Organization: organization,
-		GroupName:    name,
-		Location:     location,
 	})
 	if err != nil {
 		return err
@@ -149,7 +133,7 @@ func (g *Group) Diff(ctx p.Context, id string, olds GroupState, news GroupArgs) 
 	}, nil
 }
 
-func (o *Group) Update(ctx p.Context, id string, olds GroupState, news GroupArgs, preview bool) (GroupState, error) {
+func (g *Group) Update(ctx p.Context, id string, olds GroupState, news GroupArgs, preview bool) (GroupState, error) {
 	updatedGroupState := GroupState{
 		Id:              olds.Id,
 		PrimaryLocation: olds.PrimaryLocation,
@@ -177,7 +161,7 @@ func (o *Group) Update(ctx p.Context, id string, olds GroupState, news GroupArgs
 			updatedGroupState.Locations = make([]string, 0)
 			// delete all locations from group
 			for _, oldLocation := range olds.Locations {
-				err = o.removeLocationFromGroup(updatedGroupState.Name, updatedGroupState.Organization, oldLocation, config)
+				err = g.removeLocationFromGroup(ctx, updatedGroupState.Name, updatedGroupState.Organization, oldLocation, config)
 				if err != nil {
 					return GroupState{}, fmt.Errorf("there as an issue removing location %s from group %s: %s", oldLocation, updatedGroupState.Name, err)
 				}
@@ -185,7 +169,7 @@ func (o *Group) Update(ctx p.Context, id string, olds GroupState, news GroupArgs
 
 			// add locations back
 			for _, newLocation := range news.Locations {
-				err = o.addLocationToGroup(updatedGroupState.Name, updatedGroupState.Organization, newLocation, config)
+				err = g.addLocationToGroup(ctx, updatedGroupState.Name, updatedGroupState.Organization, newLocation, config)
 				if err != nil {
 					return GroupState{}, fmt.Errorf("there was an issue adding location %s to group %s: %s", newLocation, updatedGroupState.Name, err)
 				}
@@ -197,8 +181,42 @@ func (o *Group) Update(ctx p.Context, id string, olds GroupState, news GroupArgs
 	return updatedGroupState, nil
 }
 
-func (*Group) removeLocationFromGroup(name string, organization string, location string, config Config) error {
-	ctx := context.Background()
+func (g *Group) Read(ctx p.Context, id string, inputs GroupArgs, state GroupState) (
+	string, GroupArgs, GroupState, error) {
+	config := infer.GetConfig[Config](ctx)
+	group, err := g.getGroup(ctx, state.Name, state.Organization, config)
+	if err != nil {
+		return "", GroupArgs{}, GroupState{}, err
+	}
+
+	return id, GroupArgs{
+			Name:            inputs.Name,
+			PrimaryLocation: inputs.PrimaryLocation,
+			Organization:    inputs.Organization,
+			Locations:       inputs.Locations,
+		}, GroupState{
+			Id:              group.Group.Uuid,
+			PrimaryLocation: group.Group.PrimaryLocation,
+			DbVersion:       group.Group.Version,
+			Name:            group.Group.Name,
+			Locations:       group.Group.Locations,
+			Organization:    inputs.Organization,
+		}, nil
+}
+
+func (*Group) addLocationToGroup(ctx p.Context, name string, organization string, location string, config Config) error {
+	_, err := config.Client.AddLocationToGroup(ctx, turso.GroupLocationRequest{
+		Organization: organization,
+		GroupName:    name,
+		Location:     location,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (*Group) removeLocationFromGroup(ctx p.Context, name string, organization string, location string, config Config) error {
 	_, err := config.Client.RemoveLocationFromGroup(ctx, turso.GroupLocationRequest{
 		Organization: organization,
 		GroupName:    name,
@@ -208,4 +226,16 @@ func (*Group) removeLocationFromGroup(name string, organization string, location
 		return err
 	}
 	return nil
+}
+
+func (*Group) getGroup(ctx p.Context, name string, organization string, config Config) (*turso.GetGroupResponse, error) {
+	req := turso.GetGroupRequest{
+		OrganizationName: organization,
+		GroupName:        name,
+	}
+	group, err := config.Client.GetGroup(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return group, nil
 }
