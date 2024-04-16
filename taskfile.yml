@@ -55,7 +55,7 @@ tasks:
           bun install --yarn && \
           yarn run tsc && \
           cp ../../README.md ../../LICENSE package.json yarn.lock bin/ && \
-          sed -i.bak 's/${{.NODEJS_VERSION}}/{{.NODEJS_VERSION}}/g' bin/package.json && \
+          sed -i.bak 's/${VERSION}/{{.NODEJS_VERSION}}/g' bin/package.json && \
           rm ./bin/package.json.bak
     vars:
       NODEJS_VERSION:
