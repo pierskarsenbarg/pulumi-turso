@@ -16,6 +16,8 @@
         "config/index.ts",
         "config/vars.ts",
         "database.ts",
+        "getDatabase.ts",
+        "getGroup.ts",
         "group.ts",
         "index.ts",
         "provider.ts",

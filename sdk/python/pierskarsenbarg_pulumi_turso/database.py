@@ -13,11 +13,59 @@ __all__ = ['DatabaseArgs', 'Database']
 
 @pulumi.input_type
 class DatabaseArgs:
-    def __init__(__self__):
+    def __init__(__self__, *,
+                 group_name: pulumi.Input[str],
+                 name: Optional[pulumi.Input[str]] = None,
+                 organization_name: Optional[pulumi.Input[str]] = None):
         """
         The set of arguments for constructing a Database resource.
+        :param pulumi.Input[str] group_name: The name of the group where the database should be created. **The group must already exist.**
+        :param pulumi.Input[str] name: The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.
+        :param pulumi.Input[str] organization_name: The name of the organization or user.
         """
-        pass
+        pulumi.set(__self__, "group_name", group_name)
+        if name is not None:
+            pulumi.set(__self__, "name", name)
+        if organization_name is None:
+            organization_name = (_utilities.get_env('TURSO_ORGANISATIONNAME') or '')
+        if organization_name is not None:
+            pulumi.set(__self__, "organization_name", organization_name)
+
+    @property
+    @pulumi.getter(name="groupName")
+    def group_name(self) -> pulumi.Input[str]:
+        """
+        The name of the group where the database should be created. **The group must already exist.**
+        """
+        return pulumi.get(self, "group_name")
+
+    @group_name.setter
+    def group_name(self, value: pulumi.Input[str]):
+        pulumi.set(self, "group_name", value)
+
+    @property
+    @pulumi.getter
+    def name(self) -> Optional[pulumi.Input[str]]:
+        """
+        The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.
+        """
+        return pulumi.get(self, "name")
+
+    @name.setter
+    def name(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "name", value)
+
+    @property
+    @pulumi.getter(name="organizationName")
+    def organization_name(self) -> Optional[pulumi.Input[str]]:
+        """
+        The name of the organization or user.
+        """
+        return pulumi.get(self, "organization_name")
+
+    @organization_name.setter
+    def organization_name(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "organization_name", value)
 
 
 class Database(pulumi.CustomResource):
@@ -25,20 +73,28 @@ class Database(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 group_name: Optional[pulumi.Input[str]] = None,
+                 name: Optional[pulumi.Input[str]] = None,
+                 organization_name: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         """
-        Create a Database resource with the given unique name, props, and options.
+        Manage a Turso database
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[str] group_name: The name of the group where the database should be created. **The group must already exist.**
+        :param pulumi.Input[str] name: The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.
+        :param pulumi.Input[str] organization_name: The name of the organization or user.
         """
         ...
     @overload
     def __init__(__self__,
                  resource_name: str,
-                 args: Optional[DatabaseArgs] = None,
+                 args: DatabaseArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Create a Database resource with the given unique name, props, and options.
+        Manage a Turso database
+
         :param str resource_name: The name of the resource.
         :param DatabaseArgs args: The arguments to use to populate this resource's properties.
         :param pulumi.ResourceOptions opts: Options for the resource.
@@ -54,6 +110,9 @@ class Database(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 group_name: Optional[pulumi.Input[str]] = None,
+                 name: Optional[pulumi.Input[str]] = None,
+                 organization_name: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -63,6 +122,17 @@ class Database(pulumi.CustomResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = DatabaseArgs.__new__(DatabaseArgs)
 
+            if group_name is None and not opts.urn:
+                raise TypeError("Missing required property 'group_name'")
+            __props__.__dict__["group_name"] = group_name
+            __props__.__dict__["name"] = name
+            if organization_name is None:
+                organization_name = (_utilities.get_env('TURSO_ORGANISATIONNAME') or '')
+            __props__.__dict__["organization_name"] = organization_name
+            __props__.__dict__["db_id"] = None
+            __props__.__dict__["host_name"] = None
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["hostName"])
+        opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Database, __self__).__init__(
             'turso:index:Database',
             resource_name,
@@ -85,5 +155,50 @@ class Database(pulumi.CustomResource):
 
         __props__ = DatabaseArgs.__new__(DatabaseArgs)
 
+        __props__.__dict__["db_id"] = None
+        __props__.__dict__["group_name"] = None
+        __props__.__dict__["host_name"] = None
+        __props__.__dict__["name"] = None
+        __props__.__dict__["organization_name"] = None
         return Database(resource_name, opts=opts, __props__=__props__)
+
+    @property
+    @pulumi.getter(name="dbId")
+    def db_id(self) -> pulumi.Output[str]:
+        """
+        The database universal unique identifier (UUID).
+        """
+        return pulumi.get(self, "db_id")
+
+    @property
+    @pulumi.getter(name="groupName")
+    def group_name(self) -> pulumi.Output[str]:
+        """
+        The name of the group where the database was created.
+        """
+        return pulumi.get(self, "group_name")
+
+    @property
+    @pulumi.getter(name="hostName")
+    def host_name(self) -> pulumi.Output[str]:
+        """
+        The DNS hostname used for client libSQL and HTTP connections.
+        """
+        return pulumi.get(self, "host_name")
+
+    @property
+    @pulumi.getter
+    def name(self) -> pulumi.Output[str]:
+        """
+        The database name, unique across your organization.
+        """
+        return pulumi.get(self, "name")
+
+    @property
+    @pulumi.getter(name="organizationName")
+    def organization_name(self) -> pulumi.Output[str]:
+        """
+        The name of the organization or user that created the database.
+        """
+        return pulumi.get(self, "organization_name")
 

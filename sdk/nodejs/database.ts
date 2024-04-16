@@ -4,6 +4,9 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
+/**
+ * Manage a Turso database
+ */
 export class Database extends pulumi.CustomResource {
     /**
      * Get an existing Database resource's state with the given name, ID, and optional extra
@@ -31,6 +34,26 @@ export class Database extends pulumi.CustomResource {
         return obj['__pulumiType'] === Database.__pulumiType;
     }
 
+    /**
+     * The database universal unique identifier (UUID).
+     */
+    public /*out*/ readonly dbId!: pulumi.Output<string>;
+    /**
+     * The name of the group where the database was created.
+     */
+    public readonly groupName!: pulumi.Output<string>;
+    /**
+     * The DNS hostname used for client libSQL and HTTP connections.
+     */
+    public /*out*/ readonly hostName!: pulumi.Output<string>;
+    /**
+     * The database name, unique across your organization.
+     */
+    public readonly name!: pulumi.Output<string>;
+    /**
+     * The name of the organization or user that created the database.
+     */
+    public readonly organizationName!: pulumi.Output<string>;
 
     /**
      * Create a Database resource with the given unique name, arguments, and options.
@@ -39,13 +62,28 @@ export class Database extends pulumi.CustomResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: DatabaseArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args: DatabaseArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
+            if ((!args || args.groupName === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'groupName'");
+            }
+            resourceInputs["groupName"] = args ? args.groupName : undefined;
+            resourceInputs["name"] = args ? args.name : undefined;
+            resourceInputs["organizationName"] = (args ? args.organizationName : undefined) ?? (utilities.getEnv("TURSO_ORGANISATIONNAME") || "");
+            resourceInputs["dbId"] = undefined /*out*/;
+            resourceInputs["hostName"] = undefined /*out*/;
         } else {
+            resourceInputs["dbId"] = undefined /*out*/;
+            resourceInputs["groupName"] = undefined /*out*/;
+            resourceInputs["hostName"] = undefined /*out*/;
+            resourceInputs["name"] = undefined /*out*/;
+            resourceInputs["organizationName"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
+        const secretOpts = { additionalSecretOutputs: ["hostName"] };
+        opts = pulumi.mergeOptions(opts, secretOpts);
         super(Database.__pulumiType, name, resourceInputs, opts);
     }
 }
@@ -54,4 +92,16 @@ export class Database extends pulumi.CustomResource {
  * The set of arguments for constructing a Database resource.
  */
 export interface DatabaseArgs {
+    /**
+     * The name of the group where the database should be created. **The group must already exist.**
+     */
+    groupName: pulumi.Input<string>;
+    /**
+     * The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.
+     */
+    name?: pulumi.Input<string>;
+    /**
+     * The name of the organization or user.
+     */
+    organizationName?: pulumi.Input<string>;
 }
