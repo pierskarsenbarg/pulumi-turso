@@ -7,22 +7,47 @@ import (
 	"context"
 	"reflect"
 
+	"errors"
 	"github.com/pierskarsenbarg/pulumi-turso/sdk/go/turso/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
 
+// Manage a Turso database
 type Database struct {
 	pulumi.CustomResourceState
+
+	// The database universal unique identifier (UUID).
+	DbId pulumix.Output[string] `pulumi:"dbId"`
+	// The name of the group where the database was created.
+	GroupName pulumix.Output[string] `pulumi:"groupName"`
+	// The DNS hostname used for client libSQL and HTTP connections.
+	HostName pulumix.Output[string] `pulumi:"hostName"`
+	// The database name, unique across your organization.
+	Name pulumix.Output[string] `pulumi:"name"`
+	// The name of the organization or user that created the database.
+	OrganizationName pulumix.Output[string] `pulumi:"organizationName"`
 }
 
 // NewDatabase registers a new resource with the given unique name, arguments, and options.
 func NewDatabase(ctx *pulumi.Context,
 	name string, args *DatabaseArgs, opts ...pulumi.ResourceOption) (*Database, error) {
 	if args == nil {
-		args = &DatabaseArgs{}
+		return nil, errors.New("missing one or more required arguments")
 	}
 
+	if args.GroupName == nil {
+		return nil, errors.New("invalid value for required argument 'GroupName'")
+	}
+	if args.OrganizationName == nil {
+		if d := internal.GetEnvOrDefault("", nil, "TURSO_ORGANISATIONNAME"); d != nil {
+			args.OrganizationName = pulumix.Ptr(d.(string))
+		}
+	}
+	secrets := pulumi.AdditionalSecretOutputs([]string{
+		"hostName",
+	})
+	opts = append(opts, secrets)
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Database
 	err := ctx.RegisterResource("turso:index:Database", name, args, &resource, opts...)
@@ -56,10 +81,22 @@ func (DatabaseState) ElementType() reflect.Type {
 }
 
 type databaseArgs struct {
+	// The name of the group where the database should be created. **The group must already exist.**
+	GroupName string `pulumi:"groupName"`
+	// The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.
+	Name *string `pulumi:"name"`
+	// The name of the organization or user.
+	OrganizationName *string `pulumi:"organizationName"`
 }
 
 // The set of arguments for constructing a Database resource.
 type DatabaseArgs struct {
+	// The name of the group where the database should be created. **The group must already exist.**
+	GroupName pulumix.Input[string]
+	// The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.
+	Name pulumix.Input[*string]
+	// The name of the organization or user.
+	OrganizationName pulumix.Input[*string]
 }
 
 func (DatabaseArgs) ElementType() reflect.Type {
@@ -84,6 +121,36 @@ func (o DatabaseOutput) ToOutput(ctx context.Context) pulumix.Output[Database] {
 	return pulumix.Output[Database]{
 		OutputState: o.OutputState,
 	}
+}
+
+// The database universal unique identifier (UUID).
+func (o DatabaseOutput) DbId() pulumix.Output[string] {
+	value := pulumix.Apply[Database](o, func(v Database) pulumix.Output[string] { return v.DbId })
+	return pulumix.Flatten[string, pulumix.Output[string]](value)
+}
+
+// The name of the group where the database was created.
+func (o DatabaseOutput) GroupName() pulumix.Output[string] {
+	value := pulumix.Apply[Database](o, func(v Database) pulumix.Output[string] { return v.GroupName })
+	return pulumix.Flatten[string, pulumix.Output[string]](value)
+}
+
+// The DNS hostname used for client libSQL and HTTP connections.
+func (o DatabaseOutput) HostName() pulumix.Output[string] {
+	value := pulumix.Apply[Database](o, func(v Database) pulumix.Output[string] { return v.HostName })
+	return pulumix.Flatten[string, pulumix.Output[string]](value)
+}
+
+// The database name, unique across your organization.
+func (o DatabaseOutput) Name() pulumix.Output[string] {
+	value := pulumix.Apply[Database](o, func(v Database) pulumix.Output[string] { return v.Name })
+	return pulumix.Flatten[string, pulumix.Output[string]](value)
+}
+
+// The name of the organization or user that created the database.
+func (o DatabaseOutput) OrganizationName() pulumix.Output[string] {
+	value := pulumix.Apply[Database](o, func(v Database) pulumix.Output[string] { return v.OrganizationName })
+	return pulumix.Flatten[string, pulumix.Output[string]](value)
 }
 
 func init() {

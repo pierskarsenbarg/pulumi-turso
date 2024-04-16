@@ -10,9 +10,43 @@ using Pulumi;
 
 namespace PiersKarsenbarg.Turso
 {
+    /// <summary>
+    /// Manage a Turso database
+    /// </summary>
     [TursoResourceType("turso:index:Database")]
     public partial class Database : global::Pulumi.CustomResource
     {
+        /// <summary>
+        /// The database universal unique identifier (UUID).
+        /// </summary>
+        [Output("dbId")]
+        public Output<string> DbId { get; private set; } = null!;
+
+        /// <summary>
+        /// The name of the group where the database was created.
+        /// </summary>
+        [Output("groupName")]
+        public Output<string> GroupName { get; private set; } = null!;
+
+        /// <summary>
+        /// The DNS hostname used for client libSQL and HTTP connections.
+        /// </summary>
+        [Output("hostName")]
+        public Output<string> HostName { get; private set; } = null!;
+
+        /// <summary>
+        /// The database name, unique across your organization.
+        /// </summary>
+        [Output("name")]
+        public Output<string> Name { get; private set; } = null!;
+
+        /// <summary>
+        /// The name of the organization or user that created the database.
+        /// </summary>
+        [Output("organizationName")]
+        public Output<string> OrganizationName { get; private set; } = null!;
+
+
         /// <summary>
         /// Create a Database resource with the given unique name, arguments, and options.
         /// </summary>
@@ -20,7 +54,7 @@ namespace PiersKarsenbarg.Turso
         /// <param name="name">The unique name of the resource</param>
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
-        public Database(string name, DatabaseArgs? args = null, CustomResourceOptions? options = null)
+        public Database(string name, DatabaseArgs args, CustomResourceOptions? options = null)
             : base("turso:index:Database", name, args ?? new DatabaseArgs(), MakeResourceOptions(options, ""))
         {
         }
@@ -36,6 +70,10 @@ namespace PiersKarsenbarg.Turso
             {
                 Version = Utilities.Version,
                 PluginDownloadURL = "github://api.github.com/pierskarsenbarg/pulumi-turso",
+                AdditionalSecretOutputs =
+                {
+                    "hostName",
+                },
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
@@ -58,8 +96,27 @@ namespace PiersKarsenbarg.Turso
 
     public sealed class DatabaseArgs : global::Pulumi.ResourceArgs
     {
+        /// <summary>
+        /// The name of the group where the database should be created. **The group must already exist.**
+        /// </summary>
+        [Input("groupName", required: true)]
+        public Input<string> GroupName { get; set; } = null!;
+
+        /// <summary>
+        /// The name of the new database. Must contain only lowercase letters, numbers, dashes. No longer than 32 characters.
+        /// </summary>
+        [Input("name")]
+        public Input<string>? Name { get; set; }
+
+        /// <summary>
+        /// The name of the organization or user.
+        /// </summary>
+        [Input("organizationName")]
+        public Input<string>? OrganizationName { get; set; }
+
         public DatabaseArgs()
         {
+            OrganizationName = Utilities.GetEnv("TURSO_ORGANISATIONNAME") ?? "";
         }
         public static new DatabaseArgs Empty => new DatabaseArgs();
     }
