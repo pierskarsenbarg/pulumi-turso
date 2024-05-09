@@ -1,11 +1,11 @@
 package pkg
 
 import (
+	"context"
 	"net/http"
 	"time"
 
 	turso "github.com/pierskarsenbarg/pulumi-turso/internal"
-	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
@@ -26,7 +26,7 @@ func (c *Config) Annotate(a infer.Annotator) {
 
 var _ = (infer.CustomConfigure)((*Config)(nil))
 
-func (c *Config) Configure(ctx p.Context) error {
+func (c *Config) Configure(ctx context.Context) error {
 	httpClient := http.Client{
 		Timeout: 60 * time.Second,
 	}

@@ -1,12 +1,12 @@
 package pkg
 
 import (
+	"context"
 	"fmt"
 
 	turso "github.com/pierskarsenbarg/pulumi-turso/internal"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 )
 
 type Group struct{}
@@ -50,7 +50,7 @@ type GetGroupArgs struct {
 	OrganizationName string `pulumi:"organizationName"`
 }
 
-func (g *Group) Create(ctx p.Context, name string, input GroupArgs, preview bool) (id string, output GroupState, err error) {
+func (g *Group) Create(ctx context.Context, name string, input GroupArgs, preview bool) (id string, output GroupState, err error) {
 
 	if preview {
 		return "", GroupState{}, nil
@@ -69,7 +69,7 @@ func (g *Group) Create(ctx p.Context, name string, input GroupArgs, preview bool
 	for _, location := range input.Locations {
 		err = g.addLocationToGroup(ctx, groupName, input.Organization, location, config)
 		if err != nil {
-			ctx.Log(diag.Warning, fmt.Sprintf("couldn't add location to group: %s", err))
+			p.GetLogger(ctx).Warning(fmt.Sprintf("couldn't add location to group: %s", err))
 		}
 	}
 
@@ -83,7 +83,7 @@ func (g *Group) Create(ctx p.Context, name string, input GroupArgs, preview bool
 	}, nil
 }
 
-func (*Group) createGroup(ctx p.Context, name string, location string, organization string, config Config) (*turso.CreateGroupResponse, error) {
+func (*Group) createGroup(ctx context.Context, name string, location string, organization string, config Config) (*turso.CreateGroupResponse, error) {
 	group, err := config.Client.CreateGroup(ctx, turso.CreateGroupRequest{
 		Name:     name,
 		Location: location,
@@ -94,7 +94,7 @@ func (*Group) createGroup(ctx p.Context, name string, location string, organizat
 	return group, nil
 }
 
-func (g *Group) Delete(ctx p.Context, id string, props GroupState) error {
+func (g *Group) Delete(ctx context.Context, id string, props GroupState) error {
 	config := infer.GetConfig[Config](ctx)
 	err := g.deleteGroup(ctx, props.Name, props.Organization, config)
 	if err != nil {
@@ -103,7 +103,7 @@ func (g *Group) Delete(ctx p.Context, id string, props GroupState) error {
 	return nil
 }
 
-func (*Group) deleteGroup(ctx p.Context, name string, organization string, config Config) error {
+func (*Group) deleteGroup(ctx context.Context, name string, organization string, config Config) error {
 	err, res := config.Client.DeleteGroup(ctx, turso.DeleteGroupRequest{
 		Name:         name,
 		Organization: organization,
@@ -117,7 +117,7 @@ func (*Group) deleteGroup(ctx p.Context, name string, organization string, confi
 	return nil
 }
 
-func (g *Group) Diff(ctx p.Context, id string, olds GroupState, news GroupArgs) (p.DiffResponse, error) {
+func (g *Group) Diff(ctx context.Context, id string, olds GroupState, news GroupArgs) (p.DiffResponse, error) {
 	diff := map[string]p.PropertyDiff{}
 
 	if len(olds.Name) > 0 && len(news.Name) == 0 {
@@ -143,7 +143,7 @@ func (g *Group) Diff(ctx p.Context, id string, olds GroupState, news GroupArgs) 
 	}, nil
 }
 
-func (g *Group) Update(ctx p.Context, id string, olds GroupState, news GroupArgs, preview bool) (GroupState, error) {
+func (g *Group) Update(ctx context.Context, id string, olds GroupState, news GroupArgs, preview bool) (GroupState, error) {
 	updatedGroupState := GroupState{
 		Id:              olds.Id,
 		PrimaryLocation: olds.PrimaryLocation,
@@ -205,7 +205,7 @@ func (g *Group) Update(ctx p.Context, id string, olds GroupState, news GroupArgs
 	return updatedGroupState, nil
 }
 
-func (g *Group) Read(ctx p.Context, id string, inputs GroupArgs, state GroupState) (
+func (g *Group) Read(ctx context.Context, id string, inputs GroupArgs, state GroupState) (
 	string, GroupArgs, GroupState, error) {
 	config := infer.GetConfig[Config](ctx)
 	group, err, res := config.Client.GetGroup(ctx, turso.GetGroupRequest{
@@ -234,7 +234,7 @@ func (g *Group) Read(ctx p.Context, id string, inputs GroupArgs, state GroupStat
 		}, nil
 }
 
-func (g *GetGroup) Call(ctx p.Context, args GetGroupArgs) (GroupState, error) {
+func (g *GetGroup) Call(ctx context.Context, args GetGroupArgs) (GroupState, error) {
 	config := infer.GetConfig[Config](ctx)
 	group, err, res := config.Client.GetGroup(ctx, turso.GetGroupRequest{
 		OrganizationName: args.OrganizationName,
@@ -258,7 +258,7 @@ func (g *GetGroup) Call(ctx p.Context, args GetGroupArgs) (GroupState, error) {
 	}, nil
 }
 
-func (*Group) addLocationToGroup(ctx p.Context, name string, organization string, location string, config Config) error {
+func (*Group) addLocationToGroup(ctx context.Context, name string, organization string, location string, config Config) error {
 	_, err := config.Client.AddLocationToGroup(ctx, turso.GroupLocationRequest{
 		Organization: organization,
 		GroupName:    name,
@@ -270,7 +270,7 @@ func (*Group) addLocationToGroup(ctx p.Context, name string, organization string
 	return nil
 }
 
-func (*Group) removeLocationFromGroup(ctx p.Context, name string, organization string, location string, config Config) error {
+func (*Group) removeLocationFromGroup(ctx context.Context, name string, organization string, location string, config Config) error {
 	_, err := config.Client.RemoveLocationFromGroup(ctx, turso.GroupLocationRequest{
 		Organization: organization,
 		GroupName:    name,
@@ -282,7 +282,7 @@ func (*Group) removeLocationFromGroup(ctx p.Context, name string, organization s
 	return nil
 }
 
-// func (g *Group) getGroup(ctx p.Context, name string, organization string, config Config) (*turso.GetGroupResponse, error) {
+// func (g *Group) getGroup(ctx context.Context, name string, organization string, config Config) (*turso.GetGroupResponse, error) {
 // 	req := turso.GetGroupRequest{
 // 		OrganizationName: organization,
 // 		GroupName:        name,
