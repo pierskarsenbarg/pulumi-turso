@@ -1,6 +1,8 @@
 package pkg
 
 import (
+	"context"
+
 	turso "github.com/pierskarsenbarg/pulumi-turso/internal"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
@@ -48,7 +50,7 @@ type GetDatabaseArgs struct {
 	OrganizationName string `pulumi:"organizationName"`
 }
 
-func (d *Database) Create(ctx p.Context, name string, input DatabaseArgs, preview bool) (id string, output DatabaseState, err error) {
+func (d *Database) Create(ctx context.Context, name string, input DatabaseArgs, preview bool) (id string, output DatabaseState, err error) {
 
 	if preview {
 		return "", DatabaseState{}, nil
@@ -78,7 +80,7 @@ func (d *Database) Create(ctx p.Context, name string, input DatabaseArgs, previe
 	}, nil
 }
 
-func (*Database) createDatabase(name string, organization string, groupName string, config Config, ctx p.Context) (*turso.CreateDatabaseResponse, error) {
+func (*Database) createDatabase(name string, organization string, groupName string, config Config, ctx context.Context) (*turso.CreateDatabaseResponse, error) {
 	database, err := config.Client.CreateDatabase(ctx, name, groupName, organization)
 	if err != nil {
 		return nil, err
@@ -86,7 +88,7 @@ func (*Database) createDatabase(name string, organization string, groupName stri
 	return database, nil
 }
 
-func (d *Database) Delete(ctx p.Context, id string, props DatabaseState) error {
+func (d *Database) Delete(ctx context.Context, id string, props DatabaseState) error {
 	config := infer.GetConfig[Config](ctx)
 	orgName := config.OrganizationName
 	if len(props.OrganizationName) > 0 {
@@ -99,7 +101,7 @@ func (d *Database) Delete(ctx p.Context, id string, props DatabaseState) error {
 	return nil
 }
 
-func (*Database) deleteDatabase(organizationName string, databaseName string, config Config, ctx p.Context) error {
+func (*Database) deleteDatabase(organizationName string, databaseName string, config Config, ctx context.Context) error {
 	err := config.Client.DeleteDatabase(ctx, organizationName, databaseName)
 	if err != nil {
 		return err
@@ -108,7 +110,7 @@ func (*Database) deleteDatabase(organizationName string, databaseName string, co
 	return nil
 }
 
-func (*Database) Diff(ctx p.Context, id string, olds DatabaseState, news DatabaseArgs) (p.DiffResponse, error) {
+func (*Database) Diff(ctx context.Context, id string, olds DatabaseState, news DatabaseArgs) (p.DiffResponse, error) {
 	diff := map[string]p.PropertyDiff{}
 
 	if len(olds.Name) > 0 && len(news.Name) == 0 {
@@ -134,7 +136,7 @@ func (*Database) Diff(ctx p.Context, id string, olds DatabaseState, news Databas
 	}, nil
 }
 
-func (*Database) Read(ctx p.Context, id string, inputs DatabaseArgs, state DatabaseState) (
+func (*Database) Read(ctx context.Context, id string, inputs DatabaseArgs, state DatabaseState) (
 	string, DatabaseArgs, DatabaseState, error) {
 	config := infer.GetConfig[Config](ctx)
 
@@ -159,7 +161,7 @@ func (*Database) Read(ctx p.Context, id string, inputs DatabaseArgs, state Datab
 		}, nil
 }
 
-func (GetDatabase) Call(ctx p.Context, args GetDatabaseArgs) (DatabaseState, error) {
+func (GetDatabase) Call(ctx context.Context, args GetDatabaseArgs) (DatabaseState, error) {
 	config := infer.GetConfig[Config](ctx)
 
 	database, err, res := config.Client.GetDatabase(ctx, args.OrganizationName, args.DatabaseName)
