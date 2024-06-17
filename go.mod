@@ -3,9 +3,9 @@ module github.com/pierskarsenbarg/pulumi-turso
 go 1.21.5
 
 require (
-	github.com/pulumi/pulumi-go-provider v0.18.0
-	github.com/pulumi/pulumi/pkg/v3 v3.119.0
-	github.com/pulumi/pulumi/sdk/v3 v3.119.0
+	github.com/pulumi/pulumi-go-provider v0.19.0
+	github.com/pulumi/pulumi/pkg/v3 v3.120.0
+	github.com/pulumi/pulumi/sdk/v3 v3.120.0
 
 )
 
