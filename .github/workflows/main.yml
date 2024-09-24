@@ -5,6 +5,7 @@ name: main
       - main
     paths-ignore:
       - CHANGELOG.md
+      - .github/dependabot.yml
     tags-ignore:
       - v*
       - sdk/*
