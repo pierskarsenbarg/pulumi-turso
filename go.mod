@@ -5,8 +5,8 @@ toolchain go1.22.5
 
 require (
 	github.com/pulumi/pulumi-go-provider v0.23.0
-	github.com/pulumi/pulumi/pkg/v3 v3.141.0
-	github.com/pulumi/pulumi/sdk/v3 v3.141.0
+	github.com/pulumi/pulumi/pkg/v3 v3.142.0
+	github.com/pulumi/pulumi/sdk/v3 v3.142.0
 
 )
 
